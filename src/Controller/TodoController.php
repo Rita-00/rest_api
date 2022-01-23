@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 /**
  * @Route("/todo")
  */
@@ -19,20 +20,20 @@ class TodoController extends AbstractController
      * @Route("/get", name="get_list", methods={"GET"})
      */
 
-    public function get_list(Request $request,TodoRepository $todoRepository,UserRepository $userRepository): Response
+    public function get_list(Request $request, TodoRepository $todoRepository, UserRepository $userRepository): Response
     {
         $data = json_decode($request->getContent(), true);
 
-        if (($data["login"] == '') || ($data["password"] == '')){
-            return $this->json ([
+        if (($data["login"] == '') || ($data["password"] == '')) {
+            return $this->json([
                 'status'=>400,
                 'message'=>"Enter login or password"
             ]);
         }
 
         $user=$userRepository->findBy(['login'=>$data["login"]]);
-        if (count($user) == 0){
-            return $this->json ([
+        if (count($user) == 0) {
+            return $this->json([
                 'status'=>400,
                 'message'=>"Login error"
             ]);
@@ -40,8 +41,8 @@ class TodoController extends AbstractController
 
         $us = $userRepository->findOneByLogin($data['login']);
 
-        if ($us->getPassword() != $data["password"]){
-            return $this->json ([
+        if ($us->getPassword() != $data["password"]) {
+            return $this->json([
                 'status'=>400,
                 'message'=>"Password error"
             ]);
@@ -50,31 +51,30 @@ class TodoController extends AbstractController
         $result=$todoRepository->findBy(['login'=>$data["login"]]);
 
         $res=[];
-        foreach ($result as $todo){
+        foreach ($result as $todo) {
             $res=["todo"=>$todo->getText()];
         }
 
         return $this->json(['data' => $res], $status = 200);
-
     }
 
     /**
      * @Route("/add", name="add_todo", methods={"POST"})
      */
-    public function add(Request $request,TodoRepository $todoRepository,UserRepository $userRepository): Response
+    public function add(Request $request, TodoRepository $todoRepository, UserRepository $userRepository): Response
     {
         $data = json_decode($request->getContent(), true);
 
-        if (($data["login"] == '') || ($data["password"] == '')){
-            return $this->json ([
+        if (($data["login"] == '') || ($data["password"] == '')) {
+            return $this->json([
                 'status'=>400,
                 'message'=>"Enter login or password"
             ]);
         }
 
         $user=$userRepository->findBy(['login'=>$data["login"]]);
-        if (count($user) == 0){
-            return $this->json ([
+        if (count($user) == 0) {
+            return $this->json([
                 'status'=>400,
                 'message'=>"Login error"
             ]);
@@ -82,8 +82,8 @@ class TodoController extends AbstractController
 
         $us = $userRepository->findOneByLogin($data['login']);
 
-        if ($us->getPassword() != $data["password"]){
-            return $this->json ([
+        if ($us->getPassword() != $data["password"]) {
+            return $this->json([
                 'status'=>400,
                 'message'=>"Password error"
             ]);
@@ -101,26 +101,25 @@ class TodoController extends AbstractController
             'status'=>200,
             'message'=>"OK"
         ]);
-
     }
     /**
      * @Route("/{id}", name="edit", methods={"PUT"})
      */
 
-    public function edit(Request $request,TodoRepository $todoRepository,UserRepository $userRepository,$id): Response
+    public function edit(Request $request, TodoRepository $todoRepository, UserRepository $userRepository, $id): Response
     {
         $data = json_decode($request->getContent(), true);
 
-        if (($data["login"] == '') || ($data["password"] == '')){
-            return $this->json ([
+        if (($data["login"] == '') || ($data["password"] == '')) {
+            return $this->json([
                 'status'=>400,
                 'message'=>"Enter login or password"
             ]);
         }
 
         $user=$userRepository->findBy(['login'=>$data["login"]]);
-        if (count($user) == 0){
-            return $this->json ([
+        if (count($user) == 0) {
+            return $this->json([
                 'status'=>400,
                 'message'=>"Login error"
             ]);
@@ -128,15 +127,15 @@ class TodoController extends AbstractController
 
         $us = $user->findOneByLogin($data["login"]);
 
-        if ($us->getPassword() != $data["password"]){
-            return $this->json ([
+        if ($us->getPassword() != $data["password"]) {
+            return $this->json([
                 'status'=>400,
                 'message'=>"Password error"
             ]);
         }
 
 
-        $to_do = $todoRepository->findBy($id,['login'=>$data["login"]]);
+        $to_do = $todoRepository->findBy($id, ['login'=>$data["login"]]);
 
         $to_do->setText($data["text"]);
 
@@ -148,26 +147,25 @@ class TodoController extends AbstractController
             'status'=>200,
             'message'=>"OK"
         ]);
-
     }
 
     /**
      * @Route("/{id}", name="del", methods={"DELETE"})
      */
-    public function delete(Request $request,TodoRepository $todoRepository,UserRepository $userRepository,$id): Response
+    public function delete(Request $request, TodoRepository $todoRepository, UserRepository $userRepository, $id): Response
     {
         $data = json_decode($request->getContent(), true);
 
-        if (($data["login"] == '') || ($data["password"] == '')){
-            return $this->json ([
+        if (($data["login"] == '') || ($data["password"] == '')) {
+            return $this->json([
                 'status'=>400,
                 'message'=>"Enter login or password"
             ]);
         }
 
         $user=$userRepository->findBy(['login'=>$data["login"]]);
-        if (count($user) == 0){
-            return $this->json ([
+        if (count($user) == 0) {
+            return $this->json([
                 'status'=>400,
                 'message'=>"Login error"
             ]);
@@ -175,14 +173,14 @@ class TodoController extends AbstractController
 
         $us = $userRepository->findOneByLogin($data['login']);
 
-        if ($us->getPassword() != $data["password"]){
-            return $this->json ([
+        if ($us->getPassword() != $data["password"]) {
+            return $this->json([
                 'status'=>400,
                 'message'=>"Password error"
             ]);
         }
 
-        $to_do = $todoRepository->findBy($id,['login'=>$data["login"]]);
+        $to_do = $todoRepository->findBy($id, ['login'=>$data["login"]]);
 
         $del = $this->getDoctrine()->getManager();
         $del->remove($to_do);
@@ -192,6 +190,5 @@ class TodoController extends AbstractController
             'status'=>200,
             'message'=>"OK"
         ]);
-
     }
 }

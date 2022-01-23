@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Entity\User;
@@ -20,27 +21,28 @@ class UserController extends AbstractController
    * @Route("/add", name="add", methods={"POST"})
    */
 
-    public function register_new_user(Request $request, UserPasswordHasherInterface $passwordHash,UserRepository $userRepository): Response{
+    public function register_new_user(Request $request, UserPasswordHasherInterface $passwordHash, UserRepository $userRepository): Response
+    {
         $login = $request->get('login');
         $password = $request->get("password");
         $data = json_decode($request->getContent(), true);
 
         if ($data["login"]=="") {
-            return $this->json ([
+            return $this->json([
                 'status'=>400,
                 'message'=>"Enter login"
             ]);
         }
 
-        if ($data["password"] == ""){
-            return $this->json ([
+        if ($data["password"] == "") {
+            return $this->json([
                 'status'=>400,
                 'message'=>"Enter password"
             ]);
         }
 
-        if (count($userRepository->findBy(['login'=>$data["login"]])) > 0){
-            return $this->json ([
+        if (count($userRepository->findBy(['login'=>$data["login"]])) > 0) {
+            return $this->json([
                 'status'=>400,
                 'message'=>"This login is already taken, choose another"
             ]);
