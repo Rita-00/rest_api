@@ -76,7 +76,7 @@ class FileController extends AbstractController
                 'files'=>$result
             ]);
         }
-        return $this->response([
+        return $this->json([
             'status' => "201",
             'message' => "No Files",
         ]);
@@ -119,7 +119,6 @@ class FileController extends AbstractController
                 'status' => "200",
                 'message' => "OK",
             ]);
-
         } else {
             return $this->json ([
                 'status'=>400,
